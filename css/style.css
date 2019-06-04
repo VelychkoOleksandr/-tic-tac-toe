@@ -65,12 +65,12 @@ button {
 
 /* EVENTS STYLES */
 .cell-cross {
-    background: rgba(173, 216, 230, 0.2) url('../img/cross.jpg') no-repeat;
+    background: rgba(211, 211, 211, 0.3) url('../img/cross.jpg') no-repeat;
     background-position: center center;
 }
 
 .cell-nought {
-    background: rgba(173, 216, 230, 0.2) url('../img/nought.png') no-repeat;
+    background: rgba(211, 211, 211, 0.3) url('../img/nought.png') no-repeat;
     background-position: center center;
 }
 
