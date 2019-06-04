@@ -17,11 +17,15 @@ function addListenersToCells(event) {
         allCells[key].classList.add('cell-cross');
         currentPlayer = 'nought';
         if (checkCrossWinner()) {
-            alert('Cross is Winner!');
+            setTimeout(function () {
+                alert('Cross is Winner!');
+            }, 500);
             stopAllListeners();
         }
         else if (checkNoughtWinner()) {
-            alert('Nought is Winner!');
+            setTimeout(function () {
+                alert('Nought is Winner!');
+            }, 500);
             stopAllListeners();
         }
     }
@@ -30,11 +34,15 @@ function addListenersToCells(event) {
         allCells[key].classList.add('cell-nought');
         currentPlayer = 'cross';
         if (checkCrossWinner()) {
-            alert('Cross is Winner!');
+            setTimeout(function () {
+                alert('Cross is Winner!');
+            }, 500);
             stopAllListeners();
         }
         else if (checkNoughtWinner()) {
-            alert('Nought is Winner!');
+            setTimeout(function () {
+                alert('Nought is Winner!');
+            }, 500);
             stopAllListeners();
         }
     }
