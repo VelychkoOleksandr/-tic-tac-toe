@@ -1,39 +1,48 @@
 var winner;
 var allCells = document.getElementsByClassName('cell');
 var currentPlayer = 'cross';
+function addKeyAttribute(target, key) {
+    target.setAttribute('data-key', key);
+}
 //EVENT LISTENRS TO PLAY FIELD//
 function addClickListener(allCells) {
-    var _loop_1 = function (key) {
-        allCells[key].addEventListener('mousedown', function (event) {
-            if (event.button === 0 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'cross') {
-                allCells[key].classList.add('cell-cross');
-                currentPlayer = 'nought';
-                if (checkCrossWinner()) {
-                    console.log('Cross is Winner!');
-                }
-                else if (checkNoughtWinner()) {
-                    console.log('Nought is Winner!');
-                }
-            }
-            if (event.button === 2 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'nought') {
-                event.preventDefault();
-                allCells[key].classList.add('cell-nought');
-                currentPlayer = 'cross';
-                if (checkCrossWinner()) {
-                    console.log('Cross is Winner!');
-                }
-                else if (checkNoughtWinner()) {
-                    console.log('Nought is Winner!');
-                }
-            }
-        });
-    };
     for (var key in allCells) {
-        _loop_1(key);
+        addKeyAttribute(allCells[key], key);
+        allCells[key].addEventListener('mousedown', addListenersToCells);
     }
 }
+function addListenersToCells(event) {
+    var key = event.target.getAttribute('data-key');
+    if (event.button === 0 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'cross') {
+        allCells[key].classList.add('cell-cross');
+        currentPlayer = 'nought';
+        if (checkCrossWinner()) {
+            alert('Cross is Winner!');
+            stopAllListeners();
+        }
+        else if (checkNoughtWinner()) {
+            alert('Nought is Winner!');
+            stopAllListeners();
+        }
+    }
+    if (event.button === 2 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'nought') {
+        event.preventDefault();
+        allCells[key].classList.add('cell-nought');
+        currentPlayer = 'cross';
+        if (checkCrossWinner()) {
+            alert('Cross is Winner!');
+            stopAllListeners();
+        }
+        else if (checkNoughtWinner()) {
+            alert('Nought is Winner!');
+            stopAllListeners();
+        }
+    }
+}
+//LISTENERS CLEANER//
 function stopAllListeners() {
     for (var key in allCells) {
+        allCells[key].removeEventListener('mousedown', addListenersToCells);
     }
 }
 //ADD OTHER LISTENERS//

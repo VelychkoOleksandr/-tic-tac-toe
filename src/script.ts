@@ -2,37 +2,50 @@ let winner: string ;
 const allCells: HTMLCollectionOf<Element> = document.getElementsByClassName('cell');
 let currentPlayer = 'cross';
 
+function addKeyAttribute(target: any, key: any) {
+	target.setAttribute('data-key', key);
+}
+
 //EVENT LISTENRS TO PLAY FIELD//
 function addClickListener(allCells: HTMLCollectionOf<Element>) {
-    for (const key in allCells) {
-        allCells[key].addEventListener('mousedown', function(event: MouseEvent) {
-            if (event.button === 0 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'cross') {
-                allCells[key].classList.add('cell-cross');
-                currentPlayer = 'nought';
-                if (checkCrossWinner()) {
-                    console.log('Cross is Winner!');
-                } else if (checkNoughtWinner()) {
-                    console.log('Nought is Winner!');
-                }
-            } if (event.button === 2 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought') ) && currentPlayer === 'nought') {
-                event.preventDefault();
-                allCells[key].classList. add('cell-nought');
-                currentPlayer = 'cross';
-                if (checkCrossWinner()) {
-                    console.log('Cross is Winner!');
-                } else if (checkNoughtWinner()) {
-                    console.log('Nought is Winner!');
-                }
-            }
-
-        })
+    for (let key in allCells) {
+		    addKeyAttribute(allCells[key], key);
+            allCells[key].addEventListener('mousedown', addListenersToCells);
     }
 
 }
 
+function addListenersToCells(event: any) {
+	let key: any = event.target.getAttribute('data-key'); 
+    if (event.button === 0 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought')) && currentPlayer === 'cross') {
+        allCells[key].classList.add('cell-cross');
+        currentPlayer = 'nought';
+        if (checkCrossWinner()) {
+            alert('Cross is Winner!');
+            stopAllListeners();
+        } else if (checkNoughtWinner()) {			
+            alert('Nought is Winner!');
+            stopAllListeners();	
+        }
+    } if (event.button === 2 && !(allCells[key].classList.contains('cell-cross' || 'cell-nought') ) && currentPlayer === 'nought') {
+        event.preventDefault();
+        allCells[key].classList. add('cell-nought');
+        currentPlayer = 'cross';
+        if (checkCrossWinner()) {
+            alert('Cross is Winner!');
+            stopAllListeners();	
+        } else if (checkNoughtWinner()) {
+            alert('Nought is Winner!');
+            stopAllListeners();	
+        }
+    }
+
+}
+
+//LISTENERS CLEANER//
 function stopAllListeners() {
     for (const key in allCells) {
-
+			allCells[key].removeEventListener('mousedown', addListenersToCells);
     }
 }
 
@@ -99,6 +112,7 @@ function checkNoughtWinner(): boolean {
 
 addOtherListeners();
 addClickListener(allCells);
+
 
 
 
