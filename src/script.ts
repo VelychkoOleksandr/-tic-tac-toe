@@ -3,6 +3,8 @@ let turnsCounter: number = 0;
 let currentPlayer = 'cross';
 const allCells: HTMLCollectionOf<Element> = document.getElementsByClassName('cell');
 
+let crossArray: number[] = [];
+let nougntArray: number[] = [];
 let winCondition = [
     //rows
     [0, 1, 2],
@@ -15,25 +17,7 @@ let winCondition = [
     //diagonals
     [0, 4, 8],
     [2, 4, 6]
-]
-
-
-
-//////////////////////
-let crossArray: number[] = [];
-let nougntArray: number[] = [];
-
-function adIdToCells() {
-    let a: number = 0;
-    for (const key in allCells) {
-        allCells[key].setAttribute('id', "div" + a);
-        a++;
-    }
-}
-
-//adIdToCells(); WHY THIS PIECE OF SHIT BROKE MY PROGRAMM!!!!!!!!!!!!!!!
-
-//////////////////////
+];
 
 function addKeyAttribute(target: any, key: any) {
     if (typeof target === 'number') {
@@ -106,72 +90,40 @@ function addOtherListeners(): void {
 
 
 //CHECK WIN CONDITION FUNCTION//
-function checkCrossWinner(): boolean {
-    let allCurrentCells: HTMLCollectionOf<Element> = document.getElementsByClassName('cell');
-    if(allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[1].classList.contains('cell-cross') && allCurrentCells[2].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[3].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[5].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[6].classList.contains('cell-cross') && allCurrentCells[7].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[3].classList.contains('cell-cross') && allCurrentCells[6].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[1].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[7].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[2].classList.contains('cell-cross') && allCurrentCells[5].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    } if (allCurrentCells[2].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[6].classList.contains('cell-cross')) {
+function checkCrossWinCondition(): boolean {
+    let checkResult: boolean;
+    winCondition.map((item, index) => {
+        let result = _.isEqual(_.intersection(item, crossArray), item); 
+        if (result) {
+            winner = 'Cross';
+            checkResult =  true;
+        }
+    }); 
+    if (checkResult) {
         return true;
     }
     return false;
 }
 
-function checkNoughtWinner(): boolean {
-    let allCurrentCells: HTMLCollectionOf<Element> = document.getElementsByClassName('cell');
-    if(allCurrentCells[0].classList.contains('cell-nought') && 
-        allCurrentCells[1].classList.contains('cell-nought') && 
-        allCurrentCells[2].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[3].classList.contains('cell-nought') &&
-          allCurrentCells[4].classList.contains('cell-nought') &&
-          allCurrentCells[5].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[6].classList.contains('cell-nought') && 
-          allCurrentCells[7].classList.contains('cell-nought') && 
-          allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[0].classList.contains('cell-nought') && 
-          allCurrentCells[3].classList.contains('cell-nought') && 
-          allCurrentCells[6].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[1].classList.contains('cell-nought') && 
-          allCurrentCells[4].classList.contains('cell-nought') &&
-          allCurrentCells[7].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[2].classList.contains('cell-nought') && 
-          allCurrentCells[5].classList.contains('cell-nought') &&
-          allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[0].classList.contains('cell-nought') &&
-          allCurrentCells[4].classList.contains('cell-nought') && 
-          allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    } if (allCurrentCells[2].classList.contains('cell-nought') &&
-          allCurrentCells[4].classList.contains('cell-nought') &&
-          allCurrentCells[6].classList.contains('cell-nought')) {
+function checkNoughtWinCondition(): boolean {
+    let checkResult: boolean;
+    winCondition.map((item, index) => {
+        let result = _.isEqual(_.intersection(item, nougntArray), item); 
+        if (result) {
+            winner = 'Nought';
+            checkResult =  true;
+        }
+    }); 
+    if (checkResult) {
         return true;
     }
     return false;
 }
 
-function draw(): boolean {
+function drawCondition(): boolean {
     if(turnsCounter === 9 && 
-        checkCrossWinner() === false && 
-        checkNoughtWinner() === false) {
-        stopAllListeners();
-        alert('Nobody Won');
+        checkCrossWinCondition() === false && 
+        checkNoughtWinCondition() === false) {
         winner = 'Draw';
         return true;
     }
@@ -180,10 +132,11 @@ function draw(): boolean {
 
 //CHECK WINNER//
 function checkWinner() {
-    if (draw() ||  checkCrossWinner() || checkNoughtWinner()) {
-        alert('We Have Result!');
+    if (drawCondition() ||  checkCrossWinCondition() || checkNoughtWinCondition()) {
+        setTimeout(() => {
+            alert(`We have result! ${winner}`); 
+        }, 50);
         stopAllListeners();	
-
     }
 }
 

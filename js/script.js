@@ -2,6 +2,8 @@ var winner;
 var turnsCounter = 0;
 var currentPlayer = 'cross';
 var allCells = document.getElementsByClassName('cell');
+var crossArray = [];
+var nougntArray = [];
 var winCondition = [
     //rows
     [0, 1, 2],
@@ -15,19 +17,6 @@ var winCondition = [
     [0, 4, 8],
     [2, 4, 6]
 ];
-
-//////////////////////
-var crossArray = [];
-var nougntArray = [];
-function adIdToCells() {
-    var a = 0;
-    for (var key in allCells) {
-        allCells[key].setAttribute('id', "div" + a);
-        a++;
-    }
-}
-//adIdToCells(); WHY THIS PIECE OF SHIT BROKE MY PROGRAMM!!!!!!!!!!!!!!!
-//////////////////////
 function addKeyAttribute(target, key) {
     if (typeof target === 'number') {
         return;
@@ -90,84 +79,38 @@ function addOtherListeners() {
     }, false);
 }
 //CHECK WIN CONDITION FUNCTION//
-function checkCrossWinner() {
-    var allCurrentCells = document.getElementsByClassName('cell');
-    if (allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[1].classList.contains('cell-cross') && allCurrentCells[2].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[3].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[5].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[6].classList.contains('cell-cross') && allCurrentCells[7].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[3].classList.contains('cell-cross') && allCurrentCells[6].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[1].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[7].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[2].classList.contains('cell-cross') && allCurrentCells[5].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[0].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[8].classList.contains('cell-cross')) {
-        return true;
-    }
-    if (allCurrentCells[2].classList.contains('cell-cross') && allCurrentCells[4].classList.contains('cell-cross') && allCurrentCells[6].classList.contains('cell-cross')) {
+function checkCrossWinCondition() {
+    var checkResult;
+    winCondition.map(function (item, index) {
+        var result = _.isEqual(_.intersection(item, crossArray), item);
+        if (result) {
+            winner = 'Cross';
+            checkResult = true;
+        }
+    });
+    if (checkResult) {
         return true;
     }
     return false;
 }
-function checkNoughtWinner() {
-    var allCurrentCells = document.getElementsByClassName('cell');
-    if (allCurrentCells[0].classList.contains('cell-nought') &&
-        allCurrentCells[1].classList.contains('cell-nought') &&
-        allCurrentCells[2].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[3].classList.contains('cell-nought') &&
-        allCurrentCells[4].classList.contains('cell-nought') &&
-        allCurrentCells[5].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[6].classList.contains('cell-nought') &&
-        allCurrentCells[7].classList.contains('cell-nought') &&
-        allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[0].classList.contains('cell-nought') &&
-        allCurrentCells[3].classList.contains('cell-nought') &&
-        allCurrentCells[6].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[1].classList.contains('cell-nought') &&
-        allCurrentCells[4].classList.contains('cell-nought') &&
-        allCurrentCells[7].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[2].classList.contains('cell-nought') &&
-        allCurrentCells[5].classList.contains('cell-nought') &&
-        allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[0].classList.contains('cell-nought') &&
-        allCurrentCells[4].classList.contains('cell-nought') &&
-        allCurrentCells[8].classList.contains('cell-nought')) {
-        return true;
-    }
-    if (allCurrentCells[2].classList.contains('cell-nought') &&
-        allCurrentCells[4].classList.contains('cell-nought') &&
-        allCurrentCells[6].classList.contains('cell-nought')) {
+function checkNoughtWinCondition() {
+    var checkResult;
+    winCondition.map(function (item, index) {
+        var result = _.isEqual(_.intersection(item, nougntArray), item);
+        if (result) {
+            winner = 'Nought';
+            checkResult = true;
+        }
+    });
+    if (checkResult) {
         return true;
     }
     return false;
 }
-function draw() {
+function drawCondition() {
     if (turnsCounter === 9 &&
-        checkCrossWinner() === false &&
-        checkNoughtWinner() === false) {
-        stopAllListeners();
-        alert('Nobody Won');
+        checkCrossWinCondition() === false &&
+        checkNoughtWinCondition() === false) {
         winner = 'Draw';
         return true;
     }
@@ -175,8 +118,10 @@ function draw() {
 }
 //CHECK WINNER//
 function checkWinner() {
-    if (draw() || checkCrossWinner() || checkNoughtWinner()) {
-        alert('We Have Result!');
+    if (drawCondition() || checkCrossWinCondition() || checkNoughtWinCondition()) {
+        setTimeout(function () {
+            alert("We have result! " + winner);
+        }, 50);
         stopAllListeners();
     }
 }
